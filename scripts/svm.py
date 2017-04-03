@@ -15,21 +15,14 @@ from sklearn.svm import LinearSVC
 df_train = pd.read_csv('../data/train.tsv', sep='\t', header=0)
 df_test = pd.read_csv('../data/test.tsv', sep='\t', header=0)
 
-text_clf = Pipeline([('vect', CountVectorizer()),
-                     ('tfidf', TfidfTransformer(use_idf=False)),
-                      ('clf', LinearSVC())
+pipeline = Pipeline([('vect', CountVectorizer(ngram_range=(1,2), max_df=0.75)),
+                      ('clf', LinearSVC(random_state=0))
 ])
-text_clf = text_clf.fit(df_train.comment, df_train.label)
+text_clf = pipeline.fit(df_train.comment, df_train.label)
 
 ######## Training complete ########
 
 predicted = text_clf.predict(df_train.comment)
-for i in range(len(predicted)):
-    if predicted[i] != df_train.label[i]:
-        print('Correct answer is {0}'.format(df_train.label[i]))
-        print(df_train.comment[i])
-        print()
-        print()
 # metrics on training data
 print('accuracy : {0}'.format(accuracy_score(df_train.label, predicted)))
 print('precision : {0}'.format(precision_score(df_train.label, predicted)))
@@ -40,7 +33,7 @@ predicted = text_clf.predict(df_test.comment)
 
 # writing results to a file
 index = 0
-f_out = open('../output/output_svm2.csv', 'w')
+f_out = open('../output/output_svm_lin_bigram.csv', 'w')
 f_out.write("Id,Category\n")
 for item in predicted:
     f_out.write(u'{0},{1}\n'.format(index, item))

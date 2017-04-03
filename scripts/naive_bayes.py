@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.naive_bayes import MultinomialNB
 
 # read the data into pandas data frame
-df_train = pd.read_csv('train.tsv', sep='\t', header=0)
+df_train = pd.read_csv('../data/train.tsv', sep='\t', header=0)
 
 # tokenizing
 # transform the comment column into feature vectors
@@ -21,7 +21,7 @@ clf = MultinomialNB().fit(x_train_tfidf, df_train.label)
 
 ################################### TRAINING COMPLETE ###################################
 
-df_test = pd.read_csv('test.tsv', sep='\t', header=0)
+df_test = pd.read_csv('../data/test.tsv', sep='\t', header=0)
 
 # transform test data into feature vectors
 x_new_counts = count_vec.transform(df_test.comment)
@@ -29,7 +29,7 @@ x_new_tfidf = tfidf_transformer.transform(x_new_counts)
 
 predicted = clf.predict(x_new_tfidf)
 print(predicted)
-f_out = open('output.txt', 'w')
+f_out = open('../output/output.txt', 'w')
 
 # writing results to a file
 id=0

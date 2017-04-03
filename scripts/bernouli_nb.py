@@ -9,8 +9,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import *
 
 # read the data into pandas data frame
-df_train = pd.read_csv('train.tsv', sep='\t', header=0)
-df_test = pd.read_csv('test.tsv', sep='\t', header=0)
+df_train = pd.read_csv('../data/train.tsv', sep='\t', header=0)
+df_test = pd.read_csv('../data/test.tsv', sep='\t', header=0)
 
 text_clf = Pipeline([('vect', CountVectorizer()),
                       ('tfidf', TfidfTransformer()),
@@ -31,7 +31,7 @@ predicted = text_clf.predict(df_test.comment)
 
 # writing results to a file
 index = 0
-f_out = open('output_bernouli_nb.csv', 'w')
+f_out = open('../output/output_bernouli_nb.csv', 'w')
 f_out.write("Id,Category\n")
 for item in predicted:
     f_out.write(u'{0},{1}\n'.format(index, item))

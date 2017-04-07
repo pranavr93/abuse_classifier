@@ -1,5 +1,5 @@
-f_1 = open('../output/hybrid_2.csv', 'r')
-f_2 = open('../output/xgb_1.csv', 'r')
+f_1 = open('../output/gold.csv', 'r')
+f_2 = open('../output/xgb_5.csv', 'r')
 # f_3 = open('../output/output_xgboosting_8.csv', 'r')
 
 l1 = f_1.read().splitlines()

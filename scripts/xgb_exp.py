@@ -133,13 +133,13 @@ for param_name in sorted(parameters.keys()):
 # pickle.dump(text_clf, open(filename, 'wb'))
 
 ######## Training complete ########
-
-predicted = text_clf.predict(x_train)
-# metrics on training data
-print('accuracy : {0}'.format(accuracy_score(df_train.label, predicted)))
-print('precision : {0}'.format(precision_score(df_train.label, predicted)))
-print('recall : {0}'.format(recall_score(df_train.label, predicted)))
-print('f1 score : {0}'.format(f1_score(df_train.label, predicted)))
+#
+# predicted = text_clf.predict(x_train)
+# # metrics on training data
+# print('accuracy : {0}'.format(accuracy_score(df_train.label, predicted)))
+# print('precision : {0}'.format(precision_score(df_train.label, predicted)))
+# print('recall : {0}'.format(recall_score(df_train.label, predicted)))
+# print('f1 score : {0}'.format(f1_score(df_train.label, predicted)))
 
 predicted = text_clf.predict(x_test)
 
@@ -151,6 +151,7 @@ f_out.write("Id,Category\n")
 f_bad = open('../data/bad_words.txt', 'r')
 bad_ugrams = f_bad.read().splitlines()
 
+print('writing output to file')
 for item in predicted:
     temp_item = item
     if any(word.lower() in str(df_test.comment[index]).lower() for word in bad_ugrams):

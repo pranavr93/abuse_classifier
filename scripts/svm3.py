@@ -32,9 +32,7 @@ def add_feature(feature, x):
 # ])
 
 # read the data into pandas data frame
-f_stop = open('../data/stopwords.txt','r')
-stop_list = f_stop.read().splitlines()
-df_train = pd.read_csv('../data/train_boost.tsv', sep='\t', header=0)
+df_train = pd.read_csv('../data/train.tsv', sep='\t', header=0)
 df_test = pd.read_csv('../data/test.tsv', sep='\t', header=0)
 
 # first create the vectorizer
@@ -54,6 +52,7 @@ reg = re.compile(r'[a-zA-Z][\*]+[a-zA-Z]')
 star_list = []
 caps_list = []
 leng = []
+negate = []
 for i in range(len(df_train)):
     line = df_train.comment[i]
     num = len(filter(lambda x: x in string.uppercase, line))
@@ -69,13 +68,19 @@ for i in range(len(df_train)):
     stars = int(bool(reg.search(df_train.comment[i])))
     star_list.append(stars)
 
+    # number of negations
+    neg = 0
+    neg += len(re.findall(r'{0}'.format(' you are '), line))
+
+    negate.append(neg)
+
 star_list_test = []
 caps_list_test = []
 leng_test = []
-
+negate_test = []
 for i in range(len(df_test)):
     line = df_test.comment[i]
-    num = len(filter(lambda x: x in string.uppercase, line))
+    nu1m = len(filter(lambda x: x in string.uppercase, line))
     den = float(0.1+len(re.findall('[a-zA-Z]', line)))
     ratio = num/den
     # compute caps feature
@@ -88,16 +93,22 @@ for i in range(len(df_test)):
     stars = int(bool(reg.search(df_test.comment[i])))
     star_list_test.append(stars)
 
+    neg = 0
+    neg += len(re.findall(r'{0}'.format(' you are '), line))
+    negate_test.append(neg)
+
 print('caps features done...')
 # create a np array from it
 
 x_train = add_feature(caps_list, x_train)
 x_train = add_feature(leng, x_train)
 x_train = add_feature(star_list, x_train)
+x_train = add_feature(negate, x_train)
 
 x_test = add_feature(caps_list_test, x_test)
 x_test = add_feature(leng_test, x_test)
 x_test = add_feature(star_list_test, x_test)
+x_test = add_feature(negate_test, x_test)
 
 
 print('caps features added to training data')
@@ -120,7 +131,7 @@ print('f1 score : {0}'.format(f1_score(df_train.label, predicted)))
 predicted = model.predict(x_test)
 index = 0
 
-f_out = open('../output/result_2.csv', 'w')
+f_out = open('../output/result_3.csv', 'w')
 f_out.write("Id,Category\n")
 f_bad = open('../data/bad_words.txt', 'r')
 bad_ugrams = f_bad.read().splitlines()
@@ -135,7 +146,7 @@ for item in predicted:
     temp_item = item
     if any(word.lower() in str(df_test.comment[index]).lower() for word in bad_ugrams):
         # all_bad.write('{0}\t{1}\n'.format(1, df_test.comment[index]))
-        print('still bad words? {0}'.format(noms))
+        # print('still bad words? {0}'.format(noms))
         noms += 1
         temp_item = 1
 

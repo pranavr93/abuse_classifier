@@ -147,7 +147,7 @@ probabilities = text_clf.predict_proba(x_test)
 
 # writing results to a file
 index = 0
-f_out = open('../output/xgb_5_prob.csv', 'w')
+f_out = open('../output/xgb_4.csv', 'w')
 f_out.write("Id,Category\n")
 
 f_bad = open('../data/bad_words.txt', 'r')
@@ -158,8 +158,5 @@ for item in predicted:
     if any(word.lower() in str(df_test.comment[index]).lower() for word in bad_ugrams):
         temp_item = 1
 
-    # if probabilities[index][]
-    #f_out.write('{0},{1},{2}\n'.format(index, temp_item, probabilities[index]))
-    f_out.write('{0} {1}\n'.format(probabilities[index][0], probabilities[index][1]))
-    #f_out.write('{0},{1}\n'.format(index, temp_item))
+    f_out.write('{0},{1},{2}\n'.format(index, temp_item, probabilities[index]))
     index += 1
